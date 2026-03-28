@@ -111,7 +111,7 @@ export default function Dashboard() {
           { title: "CPI Inflation YoY", value: inflation, suffix: "%", icon: DollarSign, color: "text-red-500", bg: "bg-red-500/10", subtitle: "Purchasing Power" },
           { title: "30-Yr Mortgage", value: mortgageRate, suffix: "%", icon: Activity, color: "text-purple-500", bg: "bg-purple-500/10", subtitle: "FRED Credit Conditions" },
         ].map((metric, idx) => (
-          <div key={idx} className={console.log(metric) || `glass rounded-xl p-5 flex flex-col relative overflow-hidden group border ${metric.customBorder ? metric.customBorder : 'border-border/40'} hover:border-primary/50 transition-colors`}>
+          <div key={idx} className={`glass rounded-xl p-5 flex flex-col relative overflow-hidden group border ${metric.customBorder ? metric.customBorder : 'border-border/40'} hover:border-primary/50 transition-colors`}>
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-semibold text-foreground/80">{metric.title}</span>
               <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${metric.bg}`}>
@@ -170,5 +170,4 @@ export default function Dashboard() {
       </div>
     </div>
   );
-}
 }
