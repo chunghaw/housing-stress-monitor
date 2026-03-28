@@ -49,6 +49,42 @@ export default function Dashboard() {
         ))}
       </div>
 
+      {/* Information & KPI Explanation Panel */}
+      <div className="glass rounded-xl p-6 border border-border/40 mt-2 mb-2">
+        <h2 className="text-xl font-bold mb-3 flex items-center gap-2">
+          <Activity className="text-primary w-5 h-5" />
+          About the Dynamic Housing Stress Index (DHSI)
+        </h2>
+        <p className="text-sm text-foreground/80 leading-relaxed mb-4">
+          The DHSI is a unified, adaptive stress-monitoring system designed to detect rising financial vulnerabilities in the housing market earlier than traditional affordability metrics. It integrates labor conditions, inflation, housing prices, and credit indicators into a predictive multidimensional index. 
+          <br /><br />
+          <strong>Is it based on real data?</strong> Yes! The historical visualizations and macro indicators are natively powered by genuine historical data aggregated from 1991–2025.
+        </p>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm text-foreground/80">
+          <div className="bg-background/40 p-3 rounded-lg border border-border/30">
+            <span className="font-semibold text-foreground block mb-1">DHSI Score</span> 
+            A composite proxy indicating systemic vulnerability. Scores &gt;75 signal high risk.
+          </div>
+          <div className="bg-background/40 p-3 rounded-lg border border-border/30">
+            <span className="font-semibold text-foreground block mb-1">Unemployment & Wages</span> 
+            Measures labor deterioration. Sourced from the <strong>BLS</strong> and SSA.
+          </div>
+          <div className="bg-background/40 p-3 rounded-lg border border-border/30">
+            <span className="font-semibold text-foreground block mb-1">CPI Inflation</span> 
+            Consumer Price Index mapping to purchasing power. Sourced from the <strong>BLS</strong>.
+          </div>
+          <div className="bg-background/40 p-3 rounded-lg border border-border/30">
+            <span className="font-semibold text-foreground block mb-1">Mortgage Rates</span> 
+            Credit indicators mapping to leverage risk. Fed Funds & Mortgage data from <strong>FRED</strong>.
+          </div>
+        </div>
+        <div className="mt-4 pt-3 border-t border-border/50 text-xs text-foreground/50 flex justify-between items-center">
+          <em>Data Sources: U.S. Census Bureau, Zillow, Freddie Mac, BLS, and FRED.</em>
+          <span>Updated: Q1 2025</span>
+        </div>
+      </div>
+
       {/* Main Content Area */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-2">
         {/* Left Column - Charts Placeholder */}
