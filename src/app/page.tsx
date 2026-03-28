@@ -100,40 +100,16 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Right Column - AI & Simulation Context */}
-        <div className="flex flex-col gap-6">
+        {/* Right Column - AI Analyst */}
+        <div className="flex flex-col h-[500px]">
           {/* AI Layer Component! */}
           <AiInsights 
             dhsiScore={dhsiScore} 
             unemployment={unemployment} 
             inflation={inflation} 
             mortgageRate={mortgageRate} 
+            className="flex-1 h-full"
           />
-          
-          {/* Placeholder for Simulation Controls */}
-          <div className="glass rounded-2xl p-6 border border-border/50 flex-1">
-            <h3 className="font-semibold text-lg mb-4">Macro Sandbox</h3>
-            <p className="text-sm text-foreground/60 mb-6 font-medium">
-              Adjust economic indicators to simulate stress reactions.
-            </p>
-            {/* Input Sliders Mockup */}
-            <div className="space-y-6">
-              {[
-                { label: "Fed Funds Rate", val: "4.75%" },
-                { label: "Wage Growth (AWI)", val: "2.1%" }
-              ].map((slider, i) => (
-                <div key={i}>
-                  <div className="flex justify-between text-sm mb-2">
-                    <span className="font-medium text-foreground/80">{slider.label}</span>
-                    <span className="text-primary font-bold">{slider.val}</span>
-                  </div>
-                  <div className="h-2 w-full bg-foreground/10 rounded-full overflow-hidden">
-                    <div className="h-full bg-primary w-2/3 rounded-full" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
     </div>

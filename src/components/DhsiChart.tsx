@@ -31,7 +31,7 @@ export default function DhsiChart() {
               
               // Create a mock DHSI proxy score based on macro factors
               // High unemp, high inflation, high mortgage = higher structural stress.
-              const stress = Math.min(100, Math.max(0, 50 + (unemp * 1.5) + (inflation * 0.5) + (mortgage * 1.2) - 15));
+              const stress = Math.min(100, Math.max(0, 30 + (unemp * 3) + (inflation * 1.5) + (mortgage * 2)));
               
               return {
                 dateRaw: String(dateVal),
@@ -63,7 +63,7 @@ export default function DhsiChart() {
 
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+      <AreaChart data={data} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
         <defs>
           <linearGradient id="colorDhsi" x1="0" y1="0" x2="0" y2="1">
             <stop offset="5%" stopColor="#ef4444" stopOpacity={0.4}/>
@@ -86,7 +86,8 @@ export default function DhsiChart() {
           }}
           minTickGap={40}
         />
-        <YAxis stroke="rgba(255,255,255,0.3)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }} />
+        <YAxis yAxisId="left" orientation="left" domain={[0, 100]} stroke="rgba(255,255,255,0.3)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }} />
+        <YAxis yAxisId="right" orientation="right" domain={['auto', 'auto']} stroke="rgba(16, 185, 129, 0.4)" tick={{ fill: 'rgba(16, 185, 129, 0.6)', fontSize: 11 }} />
         <Tooltip 
           contentStyle={{ 
             backgroundColor: 'rgba(15, 23, 42, 0.9)', 
@@ -99,10 +100,10 @@ export default function DhsiChart() {
           labelStyle={{ color: 'rgba(255,255,255,0.5)', marginBottom: '8px', fontSize: 12 }}
         />
         <Legend verticalAlign="top" height={36} iconType="circle" wrapperStyle={{ fontSize: '12px' }} />
-        <Area type="monotone" dataKey="dhsi" name="DHSI Proxy" stroke="#ef4444" strokeWidth={2} fill="url(#colorDhsi)" />
-        <Area type="monotone" dataKey="hpi" name="Housing Price Index (SA)" stroke="#10b981" strokeWidth={2} fill="url(#colorHpi)" />
-        <Line type="monotone" dataKey="mortgage" name="30Y Mortgage %" stroke="#a855f7" dot={false} strokeWidth={2} />
-        <Line type="monotone" dataKey="unemployment" name="Unemployment %" stroke="#3b82f6" dot={false} strokeWidth={2} />
+        <Area yAxisId="left" type="monotone" dataKey="dhsi" name="DHSI Proxy" stroke="#ef4444" strokeWidth={2} fill="url(#colorDhsi)" />
+        <Area yAxisId="right" type="monotone" dataKey="hpi" name="Housing Price Index (SA)" stroke="#10b981" strokeWidth={2} fill="url(#colorHpi)" />
+        <Line yAxisId="left" type="monotone" dataKey="mortgage" name="30Y Mortgage %" stroke="#a855f7" dot={false} strokeWidth={2} />
+        <Line yAxisId="left" type="monotone" dataKey="unemployment" name="Unemployment %" stroke="#3b82f6" dot={false} strokeWidth={2} />
       </AreaChart>
     </ResponsiveContainer>
   );
