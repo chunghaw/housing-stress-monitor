@@ -1,11 +1,15 @@
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
-// By default, it will use process.env.OPENAI_API_KEY
-const openai = new OpenAI();
+// Prevent Next.js from attempting to statically prerender this route during build
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
   try {
+    // Instantiate inside the handler so it doesn't crash during Vercel's static build phase
+    // if the OPENAI_API_KEY is not provided in the build environment variables.
+    const openai = new OpenAI();
+    
     const body = await req.json();
     const { dhsiScore, unemployment, inflation, mortgageRate, context } = body;
 
