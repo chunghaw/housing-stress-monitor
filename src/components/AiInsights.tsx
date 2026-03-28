@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { Sparkles, Loader2, Send, MessageSquare } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { clsx } from "clsx";
@@ -24,27 +24,25 @@ interface AiInsightsProps {
   className?: string;
 }
 
-const SUGGESTED_QUESTIONS = [
-  "Why is the DHSI score at this level?",
-  "How would a 2% spike in mortgage rates impact housing stress?",
-  "What is the historical relationship between CPI and housing?",
-];
-
 export default function AiInsights({ dhsiScore, unemployment, inflation, mortgageRate, context, className }: AiInsightsProps) {
   const [messages, setMessages] = useState<Message[]>([
     { role: "assistant", content: "Hello! I am your DHSI Economic Analyst. I monitor the current macroeconomic indicators. Ask me to break down systemic vulnerabilities or simulate market scenarios!" }
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [suggestedQuestions, setSuggestedQuestions] = useState<string[]>([
+    "Why is the DHSI score at this level?",
+    "How would a 2% spike in mortgage rates impact housing stress?",
+    "What is the historical relationship between CPI and housing?"
+  ]);
+  
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
+    }
   };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages, loading]);
 
   const sendMessage = async (overrideText?: string) => {
     const textToSend = overrideText || input;
@@ -54,6 +52,12 @@ export default function AiInsights({ dhsiScore, unemployment, inflation, mortgag
     setMessages(newMessages);
     setInput("");
     setLoading(true);
+    setSuggestedQuestions([]); // Hide suggestions while loading
+    
+    // Instantly scroll to the user's message so it is fully visible.
+    // We intentionally DO NOT auto-scroll after the AI finishes generating. 
+    // This anchors the viewport to the start of the AI's response, enabling natural, top-down reading!
+    setTimeout(() => scrollToBottom(), 50);
 
     try {
       const response = await fetch("/api/ai", {
@@ -72,6 +76,10 @@ export default function AiInsights({ dhsiScore, unemployment, inflation, mortgag
       }
       
       setMessages([...newMessages, { role: "assistant", content: data.insight }]);
+      
+      if (data.suggestedQuestions && data.suggestedQuestions.length > 0) {
+        setSuggestedQuestions(data.suggestedQuestions);
+      }
     } catch (err: any) {
       console.error(err);
       setMessages([...newMessages, { role: "assistant", content: `Error: ${err.message || "Connection failed."}` }]);
@@ -98,7 +106,7 @@ export default function AiInsights({ dhsiScore, unemployment, inflation, mortgag
       </div>
 
       {/* Chat History */}
-      <div className="flex-1 overflow-y-auto p-5 pb-2 space-y-4 relative z-10 scrollbar-thin scrollbar-thumb-primary/20">
+      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto p-5 pb-2 space-y-4 relative z-10 scrollbar-thin scrollbar-thumb-primary/20">
         <AnimatePresence initial={false}>
           {messages.map((msg, i) => (
             <motion.div 
@@ -112,7 +120,7 @@ export default function AiInsights({ dhsiScore, unemployment, inflation, mortgag
                   : "bg-foreground/5 text-foreground/80 border border-border/50 rounded-tl-sm mr-auto"
               )}
             >
-              {msg.content}
+              <div className="whitespace-pre-wrap">{msg.content}</div>
             </motion.div>
           ))}
           {loading && (
@@ -125,21 +133,26 @@ export default function AiInsights({ dhsiScore, unemployment, inflation, mortgag
             </motion.div>
           )}
         </AnimatePresence>
-        <div ref={messagesEndRef} />
       </div>
 
-      {/* Suggested Questions (only show if few messages to save space) */}
-      {messages.length < 3 && (
-        <div className="px-5 pb-2 flex flex-wrap gap-2 relative z-10">
-          {SUGGESTED_QUESTIONS.map((q, i) => (
-            <button
-              key={i}
-              onClick={() => sendMessage(q)}
-              className="text-[11px] font-medium bg-foreground/5 hover:bg-primary/20 hover:text-primary transition-colors border border-border/50 rounded-full px-3 py-1 text-foreground/60 text-left"
-            >
-              {q}
-            </button>
-          ))}
+      {/* Dynamic Suggested Questions */}
+      {suggestedQuestions.length > 0 && !loading && (
+        <div className="px-5 pb-2 flex flex-col gap-2 relative z-10">
+          <span className="text-[10px] text-foreground/40 uppercase tracking-wider font-semibold px-1 flex items-center gap-1">
+            <MessageSquare className="w-3 h-3" /> Suggested Follow-ups
+          </span>
+          <div className="flex flex-wrap gap-2">
+            {suggestedQuestions.map((q, i) => (
+              <button
+                key={i}
+                onClick={() => sendMessage(q)}
+                className="text-[11px] font-medium bg-background/60 hover:bg-primary/20 hover:text-primary transition-colors border border-border/60 rounded-full px-3 py-1.5 text-foreground/70 text-left max-w-full truncate"
+                title={q}
+              >
+                {q}
+              </button>
+            ))}
+          </div>
         </div>
       )}
 
