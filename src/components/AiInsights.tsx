@@ -105,18 +105,18 @@ export default function AiInsights({ dhsiScore, unemployment, inflation, mortgag
         </div>
       </div>
 
-      {/* Chat History */}
-      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto p-5 pb-2 space-y-4 relative z-10 scrollbar-thin scrollbar-thumb-primary/20">
+      {/* Chat History — suggested follow-ups live inside here so they never overlap */}
+      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto p-5 pb-4 space-y-4 relative z-10 scrollbar-thin scrollbar-thumb-primary/20">
         <AnimatePresence initial={false}>
           {messages.map((msg, i) => (
-            <motion.div 
+            <motion.div
               key={i}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               className={cn(
                 "flex max-w-[85%] rounded-2xl px-4 py-3 text-sm",
-                msg.role === "user" 
-                  ? "bg-primary text-primary-foreground ml-auto rounded-tr-sm" 
+                msg.role === "user"
+                  ? "bg-primary text-primary-foreground ml-auto rounded-tr-sm"
                   : "bg-foreground/5 text-foreground/80 border border-border/50 rounded-tl-sm mr-auto"
               )}
             >
@@ -124,7 +124,7 @@ export default function AiInsights({ dhsiScore, unemployment, inflation, mortgag
             </motion.div>
           ))}
           {loading && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }}
               className="flex items-center gap-2 text-foreground/50 bg-foreground/5 w-fit px-4 py-3 rounded-2xl rounded-tl-sm border border-border/50"
             >
@@ -132,29 +132,32 @@ export default function AiInsights({ dhsiScore, unemployment, inflation, mortgag
               <span className="text-xs font-medium">Analyzing market data...</span>
             </motion.div>
           )}
+          {/* Suggested follow-ups rendered inside the scroll area, after the last message */}
+          {suggestedQuestions.length > 0 && !loading && (
+            <motion.div
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex flex-col gap-2 pt-1"
+            >
+              <span className="text-[10px] text-foreground/40 uppercase tracking-wider font-semibold px-1 flex items-center gap-1">
+                <MessageSquare className="w-3 h-3" /> Suggested Follow-ups
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {suggestedQuestions.map((q, i) => (
+                  <button
+                    key={i}
+                    onClick={() => sendMessage(q)}
+                    className="text-[11px] font-medium bg-background/60 hover:bg-primary/20 hover:text-primary transition-colors border border-border/60 rounded-full px-3 py-1.5 text-foreground/70 text-left max-w-full truncate"
+                    title={q}
+                  >
+                    {q}
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          )}
         </AnimatePresence>
       </div>
-
-      {/* Dynamic Suggested Questions */}
-      {suggestedQuestions.length > 0 && !loading && (
-        <div className="px-5 pb-2 flex flex-col gap-2 relative z-10">
-          <span className="text-[10px] text-foreground/40 uppercase tracking-wider font-semibold px-1 flex items-center gap-1">
-            <MessageSquare className="w-3 h-3" /> Suggested Follow-ups
-          </span>
-          <div className="flex flex-wrap gap-2">
-            {suggestedQuestions.map((q, i) => (
-              <button
-                key={i}
-                onClick={() => sendMessage(q)}
-                className="text-[11px] font-medium bg-background/60 hover:bg-primary/20 hover:text-primary transition-colors border border-border/60 rounded-full px-3 py-1.5 text-foreground/70 text-left max-w-full truncate"
-                title={q}
-              >
-                {q}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Input Area */}
       <div className="p-4 pt-2 relative z-10">
