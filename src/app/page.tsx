@@ -223,18 +223,12 @@ export default function Dashboard() {
           Project Team · CSE 6242 — Data and Visual Analytics
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            { name: "Rezvan Heydari", role: "Tableau & Visualization" },
-            { name: "Chung Haw Tan", role: "Full-Stack & Deployment" },
-            { name: "Ela Khachatryan", role: "ML Modeling & LASSO" },
-            { name: "Joseph Wu", role: "Data Pipeline & Analysis" },
-          ].map((member, i) => (
+          {["Rezvan Heydari", "Chung Haw Tan", "Ela Khachatryan", "Joseph Wu"].map((name, i) => (
             <div key={i} className="flex flex-col items-center text-center gap-2 p-4 rounded-xl bg-foreground/5 border border-border/30 hover:border-primary/30 transition-colors">
               <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-sm">
-                {member.name.split(" ").map(n => n[0]).join("")}
+                {name.split(" ").map(n => n[0]).join("")}
               </div>
-              <p className="font-semibold text-sm text-foreground">{member.name}</p>
-              <p className="text-xs text-foreground/50">{member.role}</p>
+              <p className="font-semibold text-sm text-foreground">{name}</p>
             </div>
           ))}
         </div>
