@@ -70,7 +70,10 @@ export default function TableauPage() {
       </div>
 
       {/* Embedded Tableau Dashboard */}
-      <div className="glass rounded-2xl border border-border/50 relative" style={{ minHeight: "1250px" }}>
+      <div
+        className="glass rounded-2xl border border-border/50 relative overflow-auto"
+        style={{ height: "calc(100vh - 250px)", minHeight: "560px" }}
+      >
         {!loaded && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-background/80 z-10 pointer-events-none rounded-2xl">
             <div className="w-10 h-10 border-2 border-primary border-t-transparent rounded-full animate-spin" />
@@ -81,8 +84,8 @@ export default function TableauPage() {
           key={iframeKey}
           src={embedUrl}
           width="100%"
-          height="1250"
-          style={{ border: "none", display: "block", borderRadius: "1rem" }}
+          height="1100"
+          style={{ border: "none", display: "block" }}
           onLoad={() => setLoaded(true)}
           title="Housing Stress Market Monitoring Dashboard"
           allowFullScreen
