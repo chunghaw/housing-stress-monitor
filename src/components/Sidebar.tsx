@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Activity, Home, BarChart3, LayoutDashboard, Settings } from "lucide-react";
+import { Activity, Home, BarChart3, LayoutDashboard, PieChart } from "lucide-react";
 import { motion } from "framer-motion";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -12,10 +12,10 @@ function cn(...inputs: (string | undefined | null | false)[]) {
 }
 
 const navItems = [
-  { name: "Overview", href: "/", icon: Home },
-  { name: "Stress Decomp", href: "/decomposition", icon: Activity },
-  { name: "Simulations", href: "/simulations", icon: BarChart3 },
-  { name: "Tableau Reports", href: "/tableau", icon: LayoutDashboard },
+  { name: "Overview", href: "/", icon: Home, description: "Live KPIs & trends" },
+  { name: "Stress Decomp", href: "/decomposition", icon: PieChart, description: "Factor breakdown" },
+  { name: "Simulations", href: "/simulations", icon: BarChart3, description: "What-if scenarios" },
+  { name: "Tableau Dashboard", href: "/tableau", icon: LayoutDashboard, description: "Interactive reports" },
 ];
 
 export default function Sidebar() {
@@ -23,6 +23,7 @@ export default function Sidebar() {
 
   return (
     <aside className="w-64 flex-shrink-0 hidden md:flex flex-col border-r border-border glass relative z-10">
+      {/* Logo / Brand */}
       <div className="h-16 flex items-center px-6 border-b border-border">
         <div className="flex items-center gap-2 text-primary font-bold text-lg tracking-tight">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center text-white shadow-lg shadow-primary/20">
@@ -32,8 +33,9 @@ export default function Sidebar() {
         </div>
       </div>
 
-      <nav className="flex-1 py-6 px-4 space-y-2">
-        <p className="px-2 text-xs font-semibold text-foreground/50 uppercase tracking-wider mb-4">
+      {/* Nav Links */}
+      <nav className="flex-1 py-6 px-4 space-y-1.5 overflow-y-auto">
+        <p className="px-2 text-xs font-semibold text-foreground/40 uppercase tracking-wider mb-3">
           Analytics Hub
         </p>
         {navItems.map((item) => {
@@ -60,19 +62,28 @@ export default function Sidebar() {
                     : "text-foreground/70 hover:text-foreground hover:bg-foreground/5"
                 )}
               >
-                <item.icon size={18} className={cn(isActive ? "text-primary" : "text-foreground/50")} />
-                {item.name}
+                <item.icon size={17} className={cn(isActive ? "text-primary" : "text-foreground/40")} />
+                <div className="min-w-0">
+                  <div className="text-sm leading-tight">{item.name}</div>
+                  <div className="text-[10px] text-foreground/40 leading-tight mt-0.5">{item.description}</div>
+                </div>
               </div>
             </Link>
           );
         })}
       </nav>
 
-      <div className="p-4 border-t border-border mt-auto">
-        <button className="flex items-center gap-3 w-full px-3 py-2.5 text-foreground/70 hover:text-foreground hover:bg-foreground/5 rounded-xl transition-colors">
-          <Settings size={18} className="text-foreground/50" />
-          Settings
-        </button>
+      {/* Footer: Project Info */}
+      <div className="p-4 border-t border-border space-y-3">
+        <div className="px-3 py-2.5 rounded-xl bg-primary/5 border border-primary/10">
+          <p className="text-[11px] font-semibold text-primary/80 uppercase tracking-wider mb-0.5">CSE 6242 · Georgia Tech</p>
+          <p className="text-[10px] text-foreground/40 leading-snug">Economic Conditions &amp; Housing Market Stress</p>
+        </div>
+        <div className="px-1 space-y-1">
+          {["Rezvan Heydari", "Chung Haw Tan", "Ela Khachatryan", "Joseph Wu"].map((name) => (
+            <p key={name} className="text-[10px] text-foreground/30 leading-snug">{name}</p>
+          ))}
+        </div>
       </div>
     </aside>
   );

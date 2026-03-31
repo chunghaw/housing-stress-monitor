@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { AlertCircle, TrendingUp, DollarSign, Activity, Loader2, Info } from "lucide-react";
+import { AlertCircle, TrendingUp, DollarSign, Activity, Loader2, Info, Database, Brain, GitBranch, Users } from "lucide-react";
 import AiInsights from "@/components/AiInsights";
 import DhsiChart from "@/components/DhsiChart";
 
@@ -25,15 +25,15 @@ export default function Dashboard() {
             complete: (results) => {
               const data = results.data as any[];
               if (data.length > 0) {
-                const latestRow = data[data.length - 1]; 
-                
+                const latestRow = data[data.length - 1];
+
                 const unemp = latestRow.unemployment_rate || 4.2;
                 const infl = latestRow.CPI ? (latestRow.CPI / 100) : 3.1;
                 const mortgage = latestRow.mortgage_rate_30 || latestRow.mortgage_rate_15 || 6.8;
-                
+
                 // Same DHSI proxy logic used in the DhsiChart to maintain consistency
                 const stress = Math.min(100, Math.max(0, 30 + (unemp * 3) + (infl * 1.5) + (mortgage * 2)));
-                
+
                 setDhsiScore(Number(stress.toFixed(1)));
                 setUnemployment(Number(unemp.toFixed(1)));
                 setInflation(Number(infl.toFixed(1)));
@@ -97,12 +97,12 @@ export default function Dashboard() {
       {/* Top Value Cards (Live Data) */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { 
-            title: "Latest DHSI Score", 
-            value: dhsiScore, 
-            suffix: "/ 100", 
-            icon: AlertCircle, 
-            color: currentStatus.color, 
+          {
+            title: "Latest DHSI Score",
+            value: dhsiScore,
+            suffix: "/ 100",
+            icon: AlertCircle,
+            color: currentStatus.color,
             bg: "bg-foreground/5",
             customBorder: currentStatus.border,
             subtitle: `Condition: ${currentStatus.text}`
@@ -118,7 +118,7 @@ export default function Dashboard() {
                 <metric.icon size={16} className={metric.color} />
               </div>
             </div>
-            
+
             <div className="text-4xl font-black tracking-tight mt-1 flex items-baseline gap-1">
               {loading || metric.value === null ? (
                 <Loader2 className="w-6 h-6 animate-spin text-primary mt-2" />
@@ -132,7 +132,7 @@ export default function Dashboard() {
             <div className="text-xs font-medium text-foreground/50 mt-3 uppercase tracking-wider">
               {metric.subtitle}
             </div>
-            
+
             <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
           </div>
         ))}
@@ -140,7 +140,7 @@ export default function Dashboard() {
 
       {/* Main Content Area */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-2">
-        {/* Left Column - Charts Placeholder */}
+        {/* Left Column - Chart */}
         <div className="lg:col-span-2 flex flex-col gap-6">
           <div className="glass rounded-2xl p-6 h-[500px] border border-border/50 flex flex-col relative overflow-hidden">
             <h3 className="text-xl font-bold mb-2 flex items-center gap-2">
@@ -158,14 +158,85 @@ export default function Dashboard() {
 
         {/* Right Column - AI Analyst */}
         <div className="flex flex-col h-[500px]">
-          {/* AI Layer Component! */}
-          <AiInsights 
-            dhsiScore={dhsiScore || 0} 
-            unemployment={unemployment || 0} 
-            inflation={inflation || 0} 
-            mortgageRate={mortgageRate || 0} 
+          <AiInsights
+            dhsiScore={dhsiScore || 0}
+            unemployment={unemployment || 0}
+            inflation={inflation || 0}
+            mortgageRate={mortgageRate || 0}
             className="flex-1 h-full shadow-lg"
           />
+        </div>
+      </div>
+
+      {/* Methodology Highlights */}
+      <div className="mt-2">
+        <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-foreground/90">
+          <Brain className="text-primary w-5 h-5" />
+          Methodology Highlights
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[
+            {
+              icon: Database,
+              color: "text-cyan-400",
+              bg: "bg-cyan-500/10",
+              title: "Multi-Source Data Pipeline",
+              body: "34+ years of granular data from BLS, FRED, Freddie Mac, and Zillow — spanning 1991 to Q1 2025.",
+            },
+            {
+              icon: Brain,
+              color: "text-violet-400",
+              bg: "bg-violet-500/10",
+              title: "LASSO Regularization",
+              body: "Regularized regression dynamically estimates factor weights, penalizing irrelevant variables to isolate true structural drivers.",
+            },
+            {
+              icon: GitBranch,
+              color: "text-orange-400",
+              bg: "bg-orange-500/10",
+              title: "Structural Break Detection",
+              body: "Change-point analysis identifies regime shifts — inflationary cycles vs. recessionary contractions — enabling adaptive reweighting.",
+            },
+            {
+              icon: Activity,
+              color: "text-green-400",
+              bg: "bg-green-500/10",
+              title: "Interactive What-If Engine",
+              body: "Real-time macroeconomic scenario simulation: adjust unemployment, CPI, and mortgage rates to project future DHSI responses.",
+            },
+          ].map((card, i) => (
+            <div key={i} className="glass rounded-xl p-5 border border-border/40 flex flex-col gap-3 hover:border-primary/30 transition-colors">
+              <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${card.bg}`}>
+                <card.icon size={20} className={card.color} />
+              </div>
+              <h4 className="font-semibold text-sm text-foreground">{card.title}</h4>
+              <p className="text-xs text-foreground/60 leading-relaxed">{card.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Team Section */}
+      <div className="glass rounded-xl p-6 border border-border/40 mt-2 bg-gradient-to-br from-background/80 to-primary/5">
+        <h2 className="text-lg font-bold mb-5 flex items-center gap-2">
+          <Users className="text-primary w-5 h-5" />
+          Project Team · CSE 6242 — Data and Visual Analytics
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+            { name: "Rezvan Heydari", role: "Tableau & Visualization" },
+            { name: "Chung Haw Tan", role: "Full-Stack & Deployment" },
+            { name: "Ela Khachatryan", role: "ML Modeling & LASSO" },
+            { name: "Joseph Wu", role: "Data Pipeline & Analysis" },
+          ].map((member, i) => (
+            <div key={i} className="flex flex-col items-center text-center gap-2 p-4 rounded-xl bg-foreground/5 border border-border/30 hover:border-primary/30 transition-colors">
+              <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-sm">
+                {member.name.split(" ").map(n => n[0]).join("")}
+              </div>
+              <p className="font-semibold text-sm text-foreground">{member.name}</p>
+              <p className="text-xs text-foreground/50">{member.role}</p>
+            </div>
+          ))}
         </div>
       </div>
     </div>
