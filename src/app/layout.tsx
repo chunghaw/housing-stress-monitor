@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "DHSI Dashboard | Housing Stress Monitor",
-  description: "Dynamic Housing Stress Index monitoring and simulations.",
+  title: "DHSI Engine | Housing Stress Monitor",
+  description: "Dynamic Housing Stress Index — an adaptive early-warning framework for systemic housing market stress. CSE 6242 · Georgia Tech.",
 };
 
 export default function RootLayout({
